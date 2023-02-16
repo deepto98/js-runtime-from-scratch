@@ -12,16 +12,31 @@ const server = createServer((request, response) => {
 
 // Handshake
 server.on("upgrade", (req, socket, head) => {
-  // Get websocket key from client's upgrade req
+  // -------------------HANDSHAKE------------------
+
+  // 1. Get websocket key from client's upgrade req
   const { "sec-websocket-key": websocketKey } = req.headers;
   console.log({ websocketKey });
 
-  //Create accept header using SHA1 Hash
+  // 2.Create accept header using SHA1 Hash
   const sha = crypto.createHash("sha1");
   sha.update(websocketKey + MAGIC_STRING);
   const secWebSocketAcceptHeader = sha.digest("base64");
-
   console.log(secWebSocketAcceptHeader);
+
+  // 3.Add the other headers as per the docs
+  const headers = [
+    "HTTP/1.1 101 Switching Protocols",
+    "Upgrade: websocket",
+    "Connection: Upgrade",
+    `Sec-WebSocket-Accept: ${secWebSocketAcceptHeader}`,
+    "",
+  ]
+    .map((line) => line.concat("\r\n"))
+    .join("");
+
+  // 4. Return the socket with headers
+  socket.write(headers);
 });
 
 // Error handling
