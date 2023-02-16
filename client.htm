@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Websocket Client</title>
+</head>
+
+<body>
+    <output id="messages"> </output>
+    <script>
+        const messages = document.getElementById("messages");
+        console.log("Here")
+        //This client definition needs to be implemented by the websocket server, 
+        // this sends the upgrade request Header Upgrade:websocket
+        const socket = new WebSocket('ws://localhost:1337');
+
+        socket.onopen = (event) => { console.log("Opened ws connection"); }
+        socket.onmessage = (event) => { console.log("WS Message", event); }
+        socket.onerror = (error) => { console.log("Error", error); }
+        socket.onclose = (event) => { console.log("Closed ws connection"); }
+    </script>
+</body>
+
+</html>
