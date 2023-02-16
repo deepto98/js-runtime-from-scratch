@@ -8,8 +8,10 @@ const server = createServer((request, response) => {
   //   throw new Error('Mock Error');
 }).listen(1337, () => console.log("Listening on port", PORT));
 
-server.on("upgrade", (req, socket, head) => {
-  console.log({req, socket, head});
+// Handshake 
+server.on("upgrade", (req, socket, head) => { 
+  const { "sec-websocket-key": websocketKey } = req.headers;
+  console.log({websocketKey});
 });
 
 // Error handling
